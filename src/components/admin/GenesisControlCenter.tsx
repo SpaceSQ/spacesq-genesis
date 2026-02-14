@@ -1,10 +1,12 @@
+'use client'; // 👈 这一行就是修复报错的关键！必须在第一行！
+
 import React, { useState } from 'react';
 import { 
   Activity, Users, Shield, Globe, Terminal, 
   Map, Plus, Server, Signal, Box, Zap 
 } from 'lucide-react';
 
-// 1. 内联组件 (直接写在这里，不再引用外部文件)
+// 1. 内联组件
 function SpatialNodePanel() {
   const [spaces] = useState([
     { id: 'SpaceSQ-Gen1-Node-001', owner: 'System', type: 'Genesis Node', status: 'Active', load: '45%' },
@@ -51,8 +53,8 @@ export default function GenesisControlCenter() {
       <div className="p-6">
         {activeTab === 'overview' && (
             <div className="p-4 bg-slate-900 text-slate-300 rounded font-mono text-xs">
-                <p>> System initialized.</p>
-                <p>> Waiting for command...</p>
+                <p>&gt; System initialized.</p>
+                <p>&gt; Waiting for command...</p>
             </div>
         )}
         {activeTab === 'spatial' && <SpatialNodePanel />}
