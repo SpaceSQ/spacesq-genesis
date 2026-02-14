@@ -1,103 +1,128 @@
 import React, { useState } from 'react';
-import { Globe, Map, Plus, Server, Signal, Box, Zap } from 'lucide-react';
+import { 
+  Activity, 
+  Users, 
+  Database, 
+  Settings, 
+  Shield, 
+  Globe, 
+  Terminal 
+} from 'lucide-react';
 
-export default function SpatialAdminPanel() {
-  // 模拟的空间数据
-  const [spaces] = useState([
-    { id: 'SpaceSQ-Gen1-Node-001', owner: 'System', type: 'Genesis Node', status: 'Active', load: '45%' },
-    { id: 'SpaceSQ-Gen1-Node-8848', owner: 'smarthomemiles', type: 'Personal Space', status: 'Active', load: '12%' },
-    { id: 'SpaceSQ-Gen1-Node-9921', owner: 'AI-Agent-X', type: 'Research Lab', status: 'Idle', load: '0%' },
-  ]);
+// 关键引用：确保这里引用的文件名与实际文件名完全一致（大小写敏感）
+import SpatialAdminPanel from './SpatialAdminPanel';
+
+export default function SystemAdminDashboard() {
+  const [activeTab, setActiveTab] = useState('overview');
 
   return (
-    <div className="space-y-6">
-      {/* 顶部统计卡片 */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="p-4 bg-slate-50 rounded-lg border border-slate-200">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-slate-500 text-sm">Total Spaces</span>
-            <Globe className="w-4 h-4 text-indigo-500" />
-          </div>
-          <div className="text-2xl font-bold text-slate-900">3</div>
-          <div className="text-xs text-green-600 mt-1 flex items-center">
-            <Zap className="w-3 h-3 mr-1" /> All systems normal
-          </div>
+    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+      
+      {/* Dashboard Header */}
+      <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+        <div>
+          <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+            <Shield className="w-5 h-5 text-indigo-600" />
+            System Administrator
+          </h2>
+          <p className="text-sm text-slate-500 mt-1">
+            SpaceSQ Genesis Node Control Center
+          </p>
         </div>
-        
-        <div className="p-4 bg-slate-50 rounded-lg border border-slate-200">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-slate-500 text-sm">Active Connections</span>
-            <Signal className="w-4 h-4 text-emerald-500" />
-          </div>
-          <div className="text-2xl font-bold text-slate-900">1,024</div>
-          <div className="text-xs text-slate-400 mt-1">IoT Devices Online</div>
-        </div>
-
-        <div className="p-4 bg-slate-50 rounded-lg border border-slate-200">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-slate-500 text-sm">Storage Usage</span>
-            <Server className="w-4 h-4 text-blue-500" />
-          </div>
-          <div className="text-2xl font-bold text-slate-900">45 TB</div>
-          <div className="text-xs text-slate-400 mt-1">Genesis Block Data</div>
+        <div className="flex items-center gap-2 px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-mono">
+          <Activity className="w-3 h-3" />
+          System Optimal
         </div>
       </div>
 
-      {/* 空间列表 */}
-      <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
-        <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-          <h3 className="font-semibold text-slate-800 flex items-center gap-2">
-            <Map className="w-4 h-4 text-slate-500" />
-            Registered Space Nodes
-          </h3>
-          <button className="px-3 py-1.5 bg-indigo-600 text-white text-xs font-medium rounded hover:bg-indigo-700 transition-colors flex items-center gap-1">
-            <Plus className="w-3 h-3" />
-            Mint New Space
-          </button>
-        </div>
+      {/* Tabs Navigation */}
+      <div className="flex border-b border-slate-100 px-6 bg-white">
+        <button
+          onClick={() => setActiveTab('overview')}
+          className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
+            activeTab === 'overview'
+              ? 'border-indigo-500 text-indigo-600'
+              : 'border-transparent text-slate-500 hover:text-slate-700'
+          }`}
+        >
+          <Activity className="w-4 h-4" />
+          Overview
+        </button>
+        <button
+          onClick={() => setActiveTab('spatial')}
+          className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
+            activeTab === 'spatial'
+              ? 'border-indigo-500 text-indigo-600'
+              : 'border-transparent text-slate-500 hover:text-slate-700'
+          }`}
+        >
+          <Globe className="w-4 h-4" />
+          Spatial Nodes
+        </button>
+        <button
+          onClick={() => setActiveTab('users')}
+          className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
+            activeTab === 'users'
+              ? 'border-indigo-500 text-indigo-600'
+              : 'border-transparent text-slate-500 hover:text-slate-700'
+          }`}
+        >
+          <Users className="w-4 h-4" />
+          User Management
+        </button>
+      </div>
+
+      {/* Main Content Area */}
+      <div className="p-6 min-h-[400px]">
         
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
-            <thead className="bg-slate-50 text-slate-500">
-              <tr>
-                <th className="px-4 py-3 font-medium">Space ID</th>
-                <th className="px-4 py-3 font-medium">Owner</th>
-                <th className="px-4 py-3 font-medium">Type</th>
-                <th className="px-4 py-3 font-medium">Status</th>
-                <th className="px-4 py-3 font-medium">Load</th>
-                <th className="px-4 py-3 font-medium text-right">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {spaces.map((space) => (
-                <tr key={space.id} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-4 py-3 font-mono text-indigo-600">{space.id}</td>
-                  <td className="px-4 py-3 text-slate-700">{space.owner}</td>
-                  <td className="px-4 py-3">
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-xs border border-slate-200">
-                      <Box className="w-3 h-3" />
-                      {space.type}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
-                      space.status === 'Active' 
-                        ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' 
-                        : 'bg-slate-100 text-slate-500 border border-slate-200'
-                    }`}>
-                      <span className={`w-1.5 h-1.5 rounded-full ${space.status === 'Active' ? 'bg-emerald-500' : 'bg-slate-400'}`}></span>
-                      {space.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-slate-600 font-mono">{space.load}</td>
-                  <td className="px-4 py-3 text-right">
-                    <button className="text-slate-400 hover:text-indigo-600 text-xs font-medium">Manage</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        {/* Tab 1: Overview */}
+        {activeTab === 'overview' && (
+          <div className="space-y-6 animate-in fade-in duration-300">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="p-5 bg-indigo-50 rounded-xl border border-indigo-100">
+                <div className="text-indigo-600 font-bold text-lg mb-1">System Load</div>
+                <div className="text-3xl font-mono font-bold text-slate-900">12%</div>
+                <div className="text-xs text-indigo-400 mt-2">CPU / Memory Optimized</div>
+              </div>
+              <div className="p-5 bg-blue-50 rounded-xl border border-blue-100">
+                <div className="text-blue-600 font-bold text-lg mb-1">Total Assets</div>
+                <div className="text-3xl font-mono font-bold text-slate-900">1,024 SQC</div>
+                <div className="text-xs text-blue-400 mt-2">Circulating Supply</div>
+              </div>
+              <div className="p-5 bg-purple-50 rounded-xl border border-purple-100">
+                <div className="text-purple-600 font-bold text-lg mb-1">AI Agents</div>
+                <div className="text-3xl font-mono font-bold text-slate-900">8</div>
+                <div className="text-xs text-purple-400 mt-2">Active Sessions</div>
+              </div>
+            </div>
+            
+            <div className="bg-slate-900 rounded-lg p-4 font-mono text-xs text-slate-300 overflow-hidden">
+               <div className="flex items-center gap-2 text-emerald-400 mb-2 border-b border-slate-700 pb-2">
+                 <Terminal className="w-3 h-3" /> System Logs
+               </div>
+               <p>> [10:00:01] Genesis Block verified.</p>
+               <p>> [10:05:23] New user registration: ID #9921</p>
+               <p>> [10:12:00] Spatial index updated.</p>
+               <p className="animate-pulse">> _</p>
+            </div>
+          </div>
+        )}
+
+        {/* Tab 2: Spatial Admin Panel (Here is the imported component) */}
+        {activeTab === 'spatial' && (
+          <div className="animate-in fade-in duration-300">
+            <SpatialAdminPanel />
+          </div>
+        )}
+
+        {/* Tab 3: Users Placeholder */}
+        {activeTab === 'users' && (
+          <div className="text-center py-20 text-slate-400 animate-in fade-in duration-300">
+            <Users className="w-12 h-12 mx-auto mb-4 opacity-20" />
+            <p>User management module is loading...</p>
+          </div>
+        )}
+
       </div>
     </div>
   );
