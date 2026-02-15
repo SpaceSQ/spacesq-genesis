@@ -1,58 +1,117 @@
-"use client";
+'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
-import { CommandLine } from '@/components/terminal/CommandLine';
-import { Terminal as TerminalIcon, Cpu, Wifi, ShieldCheck } from 'lucide-react';
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 
 export default function TerminalPage() {
-  const [bootSequence, setBootSequence] = useState(true);
+  const [input, setInput] = useState('');
+  const [history, setHistory] = useState<string[]>([
+    "SPACE_SQ KERNEL [Version 1.0.4]",
+    "(c) 2024 Genesis Corporation. All rights reserved.",
+    "",
+    "Initialize system...",
+    "Loading neural interfaces... OK",
+    "Mounting holographic storage... OK",
+    "Connecting to interplanetary link... CONNECTED",
+    "",
+    "Welcome, Commander. Type 'help' for available commands.",
+    ""
+  ]);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
-  // 模拟启动自检画面
+  // 自动滚动到底部
   useEffect(() => {
-    const timer = setTimeout(() => setBootSequence(false), 3000);
-    return () => clearTimeout(timer);
-  }, []);
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [history]);
 
-  if (bootSequence) {
-    return (
-      <div className="min-h-screen bg-black text-green-500 font-mono text-xs p-8 flex flex-col justify-end pb-20">
-        <div className="space-y-1">
-<p>&gt; KERNEL_INIT: DETECTING HARDWARE...</p>
-        <p>&gt; CPU: SILICON_NEURAL_ENGINE_V9 [OK]</p>
-        <p>&gt; MEMORY: 128TB HOLOGRAPHIC STORAGE [OK]</p>
-        <p>&gt; NETWORK: INTERPLANETARY_LINK (DTN) [CONNECTED]</p>
-        <p className="animate-pulse mt-4">&gt; _</p>
-          <p className="animate-pulse">&gt;SYSTEM READY. HANDSHAKE REQUIRED.</p>
-        </div>
-      </div>
-    );
-  }
+  // 保持焦点
+  const focusInput = () => {
+    inputRef.current?.focus();
+  };
+
+  const handleCommand = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+
+    const cmd = input.trim().toLowerCase();
+    const newHistory = [...history, `> ${input}`]; // 注意：这里显示用户输入
+
+    // 命令解析逻辑
+    switch (cmd) {
+      case 'help':
+        newHistory.push(
+          "AVAILABLE COMMANDS:",
+          "  help     - Show this list",
+          "  status   - System diagnostic",
+          "  whoami   - Current session info",
+          "  clear    - Clear terminal screen",
+          "  exit     - Return to GUI"
+        );
+        break;
+      case 'status':
+        newHistory.push(
+          "SYSTEM STATUS: NOMINAL",
+          "CPU Load: 3%",
+          "Memory: 14TB / 128TB",
+          "Network: ENCRYPTED [AES-256]"
+        );
+        break;
+      case 'whoami':
+        newHistory.push("USER: guest@genesis-node-01", "ACCESS: LEVEL 1 (OBSERVER)");
+        break;
+      case 'clear':
+        setHistory([]);
+        setInput('');
+        return;
+      case 'exit':
+        window.location.href = '/';
+        return;
+      default:
+        newHistory.push(`Command not found: '${cmd}'. Try 'help'.`);
+    }
+
+    setHistory(newHistory);
+    setInput('');
+  };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-[#cccccc] font-mono selection:bg-green-900 selection:text-white flex flex-col">
-      
-      {/* 顶部状态栏 */}
-      <header className="h-12 border-b border-[#333] flex items-center justify-between px-4 bg-[#111]">
-        <div className="flex items-center gap-3">
-          <TerminalIcon size={16} className="text-green-500" />
-          <span className="text-xs font-bold tracking-widest">SpaceSQ TERMINAL v2.0</span>
-        </div>
-        <div className="flex gap-4 text-[10px] text-[#666]">
-          <span className="flex items-center gap-1"><Wifi size={10}/> DTN: ACTIVE</span>
-          <span className="flex items-center gap-1"><Cpu size={10}/> LOAD: 12%</span>
-          <span className="flex items-center gap-1"><ShieldCheck size={10}/> SECURE</span>
-        </div>
-      </header>
+    <div 
+      className="min-h-screen bg-black text-green-500 font-mono text-sm p-4 md:p-8 overflow-hidden flex flex-col"
+      onClick={focusInput}
+    >
+      {/* 退出按钮 */}
+      <div className="fixed top-4 right-4 z-50">
+         <Link href="/" className="text-green-800 hover:text-green-400 transition-colors border border-green-900 px-3 py-1 rounded">
+            EXIT KERNEL
+         </Link>
+      </div>
 
-      {/* 核心终端区域 */}
-      <main className="flex-1 p-4 overflow-hidden relative">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/scanline.png')] opacity-10 pointer-events-none"></div>
-        <CommandLine />
-      </main>
-
-      {/* 底部提示 */}
-      <footer className="h-8 border-t border-[#333] bg-[#111] flex items-center px-4 text-[10px] text-[#444]">
-        <span>Type 'help' for available commands. Authorized Personnel Only.</span>
-      </footer>
+      <div className="flex-1 overflow-y-auto pb-20 custom-scrollbar">
+        {history.map((line, i) => (
+          <div key={i} className="whitespace-pre-wrap break-words min-h-[1.2em]">
+            {/* 安全地渲染可能包含 > 的文本 */}
+            {line}
+          </div>
+        ))}
+        
+        {/* 输入行 */}
+        <form onSubmit={handleCommand} className="flex items-center mt-2">
+          <span className="mr-2">&gt;</span>
+          <input
+            ref={inputRef}
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            className="flex-1 bg-transparent border-none outline-none text-green-500 caret-green-500"
+            autoFocus
+            spellCheck={false}
+            autoComplete="off"
+          />
+        </form>
+        <div ref={bottomRef} />
+      </div>
     </div>
   );
 }
