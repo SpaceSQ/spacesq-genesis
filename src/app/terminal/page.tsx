@@ -16,12 +16,12 @@ export default function TerminalPage() {
     return (
       <div className="min-h-screen bg-black text-green-500 font-mono text-xs p-8 flex flex-col justify-end pb-20">
         <div className="space-y-1">
-          <p>> KERNEL_INIT: DETECTING HARDWARE...</p>
-          <p>> CPU: SILICON_NEURAL_ENGINE_V9 [OK]</p>
-          <p>> MEMORY: 128TB HOLOGRAPHIC STORAGE [OK]</p>
-          <p>> NETWORK: INTERPLANETARY_LINK (DTN) [CONNECTED]</p>
-          <p>> LOADING MODULES: SSSU_DRIVER, RESOLVE_INTENT, NBT_LEDGER...</p>
-          <p className="animate-pulse">> SYSTEM READY. HANDSHAKE REQUIRED.</p>
+<p>&gt; KERNEL_INIT: DETECTING HARDWARE...</p>
+        <p>&gt; CPU: SILICON_NEURAL_ENGINE_V9 [OK]</p>
+        <p>&gt; MEMORY: 128TB HOLOGRAPHIC STORAGE [OK]</p>
+        <p>&gt; NETWORK: INTERPLANETARY_LINK (DTN) [CONNECTED]</p>
+        <p className="animate-pulse mt-4">&gt; _</p>
+          <p className="animate-pulse">&gt;SYSTEM READY. HANDSHAKE REQUIRED.</p>
         </div>
       </div>
     );

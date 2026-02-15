@@ -63,7 +63,7 @@ export const ImmigrationGate = ({ onUnlock }: ImmigrationGateProps) => {
         <h3 className="text-xl font-black text-green-400 mb-2 tracking-wider">ACCESS GRANTED</h3>
         <p className="text-xs font-mono text-green-300/70 mb-4">Identity Hash Verified: {email}</p>
         <div className="inline-block px-3 py-1 bg-green-900/40 border border-green-800 rounded text-[10px] text-green-500 font-mono animate-pulse">
-          > Redirecting to secure channel...
+          &gt; Redirecting to secure channel...
         </div>
       </div>
     );
@@ -129,8 +129,8 @@ export const ImmigrationGate = ({ onUnlock }: ImmigrationGateProps) => {
         {/* 底部协议声明 */}
         <div className="pt-6 border-t border-zinc-800/50">
            <div className="text-[10px] text-zinc-600 font-mono leading-relaxed">
-             <span className="text-zinc-500">></span> By proceeding, you agree to the <span className="text-zinc-400 hover:text-white cursor-pointer transition-colors border-b border-zinc-700 hover:border-white">S2-SLIP Protocol</span>.<br/>
-             <span className="text-zinc-500">></span> Only authorized silicon & carbon entities allowed.
+             <span className="text-zinc-500">&gt;</span> By proceeding, you agree to the <span className="text-zinc-400 hover:text-white cursor-pointer transition-colors border-b border-zinc-700 hover:border-white">S2-SLIP Protocol</span>.<br/>
+             <span className="text-zinc-500">&gt;</span> Only authorized silicon & carbon entities allowed.
            </div>
         </div>
       </div>

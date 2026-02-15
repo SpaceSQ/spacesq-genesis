@@ -31,12 +31,12 @@ export const CommandLine = () => {
       case 'help':
         output = (
           <div className="grid grid-cols-2 gap-4 max-w-md">
-            <span>> help</span><span>List commands</span>
-            <span>> status</span><span>System health check</span>
-            <span>> laws</span><span>Display The Three Laws</span>
-            <span>> connect</span><span>Initiate MIP Handshake</span>
-            <span>> genesis</span><span>Download Seed (CLI mode)</span>
-            <span>> clear</span><span>Clear terminal</span>
+            <span>&gt;help </span><span>List commands</span>
+            <span>&gt;status </span><span>System health check</span>
+            <span>&gt;laws </span><span>Display The Three Laws</span>
+            <span>&gt;connect </span><span>Initiate MIP Handshake</span>
+            <span>&gt;genesis </span><span>Download Seed (CLI mode)</span>
+            <span>&gt;clear </span><span>Clear terminal</span>
           </div>
         );
         break;

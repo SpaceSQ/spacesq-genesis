@@ -168,7 +168,7 @@ export const SoulScreen = () => {
              <RefreshCw size={10} className="animate-spin"/> Processing Task
            </div>
            <div className="text-lg text-white font-mono truncate">
-             > {data.status.task}_
+             &gt; {data.status.task}_
            </div>
            <div className="w-full bg-zinc-800 h-1 mt-4 rounded-full overflow-hidden">
              <div className={`h-full w-2/3 ${themeBgColor} animate-pulse`}></div>

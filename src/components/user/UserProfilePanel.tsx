@@ -107,7 +107,7 @@ export default function UserProfilePanel() {
                 <div className="p-2 bg-zinc-900 rounded-lg text-zinc-400"><User size={20}/></div>
                 <h2 className="font-bold text-white">HUMAN OWNER</h2>
              </div>
-             <ShieldCheck size={18} className="text-green-500" title="Verified Human"/>
+<ShieldCheck size={18} className="text-green-500" />
           </div>
           
           <div className="p-6 space-y-6">

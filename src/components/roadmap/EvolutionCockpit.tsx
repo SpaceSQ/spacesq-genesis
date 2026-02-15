@@ -50,9 +50,9 @@ export const EvolutionCockpit = () => {
         </div>
 
         <div className="mt-8 p-4 bg-black rounded-lg border border-zinc-800 text-[10px] font-mono text-zinc-400">
-          > SIMULATING: {STAGES[stage-1].subtitle}<br/>
-          > KERNEL: SpaceSQ v{stage}.0<br/>
-          > STATUS: <span className="animate-pulse text-green-500">RUNNING</span>
+          &gt; SIMULATING: {STAGES[stage-1].subtitle}<br/>
+          &gt; KERNEL: SpaceSQ v{stage}.0<br/>
+          &gt; STATUS: <span className="animate-pulse text-green-500">RUNNING</span>
         </div>
       </div>
 
