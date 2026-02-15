@@ -12,15 +12,14 @@ export default function LoginPage() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
-    // 模拟身份验证过程 (2秒后跳转)
+    // 模拟身份验证过程
     setTimeout(() => {
       router.push('/user');
     }, 2000);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden bg-black text-white">
       
       {/* 动态背景装饰 */}
       <div className="absolute inset-0 bg-grid-pattern opacity-20 pointer-events-none"></div>
@@ -41,7 +40,6 @@ export default function LoginPage() {
         <div className="bg-zinc-900/80 backdrop-blur-xl border border-zinc-800 rounded-2xl p-8 shadow-2xl animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100">
           
           <form onSubmit={handleLogin} className="space-y-6">
-            
             <div className="space-y-2">
               <label className="text-xs font-mono text-indigo-400 uppercase tracking-wider">Citizen ID / Email</label>
               <div className="relative group">
@@ -90,20 +88,19 @@ export default function LoginPage() {
                 </>
               )}
             </button>
-
           </form>
 
           <div className="mt-8 pt-6 border-t border-white/5 text-center">
             <p className="text-slate-500 text-xs">
               Don't have a citizenship?{' '}
-              <Link href="/about" className="text-indigo-400 hover:text-indigo-300 transition-colors">
+              {/* 👇 关键修复：这里的链接改成了 /register */}
+              <Link href="/register" className="text-indigo-400 hover:text-indigo-300 transition-colors">
                 Apply for Residency
               </Link>
             </p>
           </div>
         </div>
 
-        {/* 底部状态 */}
         <div className="mt-8 text-center animate-in fade-in duration-1000 delay-300">
           <div className="inline-flex items-center gap-2 text-xs font-mono text-emerald-500/70 bg-emerald-950/20 px-3 py-1 rounded-full border border-emerald-900/50">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>

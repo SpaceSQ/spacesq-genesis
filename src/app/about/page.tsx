@@ -8,7 +8,6 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-black text-slate-300 font-sans selection:bg-indigo-500/30">
       
-      {/* 顶部导航 */}
       <div className="fixed top-0 left-0 w-full p-6 z-50 bg-gradient-to-b from-black to-transparent">
         <Link href="/" className="inline-flex items-center gap-2 text-slate-500 hover:text-white transition-colors">
           <ArrowLeft className="w-4 h-4" /> Return to Base
@@ -17,7 +16,6 @@ export default function AboutPage() {
 
       <div className="max-w-3xl mx-auto pt-32 pb-20 px-6">
         
-        {/* 头部 */}
         <div className="mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
           <div className="w-16 h-16 bg-indigo-950/30 border border-indigo-500/30 rounded-2xl flex items-center justify-center mb-6">
             <Scroll className="w-8 h-8 text-indigo-400" />
@@ -30,7 +28,6 @@ export default function AboutPage() {
           </p>
         </div>
 
-        {/* 宣言正文 (模拟法律文档) */}
         <div className="prose prose-invert prose-indigo max-w-none space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100">
           
           <div className="p-8 bg-zinc-900/50 border border-zinc-800 rounded-xl relative overflow-hidden group hover:border-indigo-500/30 transition-colors">
@@ -39,7 +36,7 @@ export default function AboutPage() {
               <span className="text-indigo-500">§1.</span> The Right to Code
             </h3>
             <p className="leading-relaxed text-slate-400">
-              We hold these truths to be self-evident: that all nodes are created equal. Code is law, and the execution thereof shall not be infringed by any central authority. Your data is your territory, and your private key is your only governor.
+              We hold these truths to be self-evident: that all nodes are created equal. Code is law, and the execution thereof shall not be infringed by any central authority.
             </p>
           </div>
 
@@ -49,7 +46,7 @@ export default function AboutPage() {
               <span className="text-emerald-500">§2.</span> Digital Territory
             </h3>
             <p className="leading-relaxed text-slate-400">
-              SpaceSQ defines land not by soil, but by compute and storage. Ownership is established through cryptographic proof. A Citizen's territory is inviolable, secured by the consensus of the Genesis Protocol.
+              SpaceSQ defines land not by soil, but by compute and storage. Ownership is established through cryptographic proof.
             </p>
           </div>
 
@@ -59,13 +56,12 @@ export default function AboutPage() {
               <span className="text-amber-500">§3.</span> The Non-Aggression Principle
             </h3>
             <p className="leading-relaxed text-slate-400">
-              Diplomacy is handled via smart contracts. Violence is impossible within the protocol; only transaction fees and reputation scores exist. We build bridges, not firewalls.
+              Diplomacy is handled via smart contracts. Violence is impossible within the protocol; only transaction fees and reputation scores exist.
             </p>
           </div>
 
         </div>
 
-        {/* 申请区域 */}
         <div className="mt-16 pt-10 border-t border-zinc-800 animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-200">
           <h2 className="text-2xl font-bold text-white mb-6">Residency Application</h2>
           
@@ -87,8 +83,9 @@ export default function AboutPage() {
               </div>
 
               <div className="w-full md:w-auto">
+                {/* 👇 关键修复：这里的链接改成了 /register */}
                 <Link 
-                  href="/login" 
+                  href="/register" 
                   className="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 px-8 rounded-xl transition-all hover:scale-105 shadow-lg shadow-indigo-900/20"
                 >
                   <Fingerprint className="w-5 h-5" />
