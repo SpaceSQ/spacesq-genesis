@@ -1,5 +1,5 @@
 import React from 'react';
-// 👇 重新引入我们的核心控制台
+// 👇 关键：重新引用我们之前修好的 GenesisControlCenter
 import GenesisControlCenter from '@/components/admin/GenesisControlCenter';
 
 export const metadata = {
@@ -16,7 +16,7 @@ export default function AdminPage() {
           <p className="text-slate-500">Manage your SpaceSQ Genesis instance</p>
         </header>
         
-        {/* 👇 恢复组件显示 */}
+        {/* 👇 恢复显示这个强大的组件 */}
         <GenesisControlCenter />
       </div>
     </div>
