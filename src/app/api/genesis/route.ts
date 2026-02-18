@@ -1,66 +1,56 @@
 import { NextResponse } from 'next/server';
-import { promises as fs } from 'fs';
-import path from 'path';
 
 export const dynamic = 'force-dynamic';
 
-// 严格对应 Python 生成的文件名
-const FILENAME_HUMANS = 'space2_humans_history.jsonl';
-const FILENAME_SILICONS = 'space2_silicons_history.jsonl';
+// 动态获取当前域名，以便在 API 内部请求 public 文件夹
+function getBaseUrl() {
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  return 'http://localhost:3000';
+}
 
-async function debugRead(fileName: string) {
-  const filePath = path.join(process.cwd(), fileName);
-  console.log(`[🔍 侦探模式] 尝试读取文件: ${filePath}`);
+async function fetchDataFile(fileName: string) {
+  const baseUrl = getBaseUrl();
+  const fileUrl = `${baseUrl}/${fileName}`;
+  
+  console.log(`[Genesis Fetch] Attempting to fetch: ${fileUrl}`);
 
   try {
-    // 1. 检查文件是否存在
-    await fs.access(filePath);
-    console.log(`[✅ 成功] 文件存在: ${fileName}`);
+    const response = await fetch(fileUrl, {
+      cache: 'no-store', // 确保每次都拿最新数据
+    });
 
-    // 2. 读取内容
-    const content = await fs.readFile(filePath, 'utf-8');
-    console.log(`[📄 内容] 文件大小: ${content.length} 字符`);
-
-    // 3. 尝试解析
-    const lines = content.split('\n').filter(l => l.trim() !== '');
-    console.log(`[📊 行数] 有效行数: ${lines.length}`);
-
-    const data = lines.map((line, idx) => {
-      try {
-        return JSON.parse(line);
-      } catch (e) {
-        console.error(`[❌ 解析失败] 第 ${idx + 1} 行 JSON 格式错误:`, line.substring(0, 50) + '...');
-        return null;
-      }
-    }).filter(item => item !== null);
-
-    console.log(`[🎉 最终] 成功解析 ${data.length} 条数据`);
-    return data;
-
-  } catch (error: any) {
-    console.error(`[💥 失败] 无法读取 ${fileName}`);
-    console.error(`错误详情: ${error.message}`);
-    
-    // 关键侦探：列出当前目录下到底有什么文件
-    try {
-      const files = await fs.readdir(process.cwd());
-      console.log(`[📂 现场勘查] 当前目录 (${process.cwd()}) 下的文件清单:`);
-      console.log(files.join('\n'));
-    } catch (e) {
-      console.error("甚至无法读取当前目录列表...");
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
+    const text = await response.text();
+    // 解析 JSONL 格式
+    return text
+      .split('\n')
+      .filter(line => line.trim() !== '')
+      .map(line => {
+        try {
+          return JSON.parse(line);
+        } catch (e) {
+          console.error(`Parse error in line: ${line.substring(0, 30)}`);
+          return null;
+        }
+      })
+      .filter(item => item !== null);
+  } catch (error: any) {
+    console.error(`[Genesis Error] Failed to fetch ${fileName}:`, error.message);
     return [];
   }
 }
 
 export async function GET() {
-  console.log('\n--- 🚀 API 请求开始 ---');
-  
-  const humans = await debugRead(FILENAME_HUMANS);
-  const silicons = await debugRead(FILENAME_SILICONS);
+  // 1. 通过内部网络请求读取 public 下的文件
+  const humans = await fetchDataFile('space2_humans_history.jsonl');
+  const silicons = await fetchDataFile('space2_silicons_history.jsonl');
 
-  // 格式化数据以适配前端
+  console.log(`[Genesis Result] Found ${humans.length} humans, ${silicons.length} silicons`);
+
+  // 2. 格式化数据适配管理后台
   const formattedHumans = humans.map((h: any, index: number) => ({
     seq: index + 1,
     role: 'HUMAN',
@@ -85,15 +75,17 @@ export async function GET() {
 
   const allUsers = [...formattedSilicons, ...formattedHumans].reverse();
 
-  console.log(`[🏁 响应] 返回总数据: ${allUsers.length} 条`);
-  console.log('--- API 请求结束 ---\n');
-
   return NextResponse.json({
     data: allUsers,
     stats: {
       total: allUsers.length,
       human: humans.length,
       silicon: silicons.length
+    },
+    // 增加调试信息
+    debug: {
+      source: getBaseUrl(),
+      timestamp: new Date().toISOString()
     }
   });
 }
