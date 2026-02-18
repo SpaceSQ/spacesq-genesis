@@ -1,63 +1,55 @@
 import { NextResponse } from 'next/server';
+import { promises as fs } from 'fs';
+import path from 'path';
 
 export const dynamic = 'force-dynamic';
 
-// 动态获取当前域名，以便在 API 内部请求 public 文件夹
-function getBaseUrl() {
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-  return 'http://localhost:3000';
-}
-
-async function fetchDataFile(fileName: string) {
-  const baseUrl = getBaseUrl();
-  const fileUrl = `${baseUrl}/${fileName}`;
-  
-  console.log(`[Genesis Fetch] Attempting to fetch: ${fileUrl}`);
-
-  try {
-    const response = await fetch(fileUrl, {
-      cache: 'no-store', // 确保每次都拿最新数据
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const text = await response.text();
-    // 解析 JSONL 格式
-    return text
-      .split('\n')
-      .filter(line => line.trim() !== '')
-      .map(line => {
-        try {
-          return JSON.parse(line);
-        } catch (e) {
-          console.error(`Parse error in line: ${line.substring(0, 30)}`);
-          return null;
-        }
-      })
-      .filter(item => item !== null);
-  } catch (error: any) {
-    console.error(`[Genesis Error] Failed to fetch ${fileName}:`, error.message);
-    return [];
-  }
-}
-
 export async function GET() {
-  // 1. 通过内部网络请求读取 public 下的文件
-  const humans = await fetchDataFile('space2_humans_history.jsonl');
-  const silicons = await fetchDataFile('space2_silicons_history.jsonl');
+  // 1. 定位数据文件路径
+  // 在 Vercel 部署环境中，文件通常被放在项目根目录下的 public
+  const publicDir = path.join(process.cwd(), 'public');
+  const humansPath = path.join(publicDir, 'space2_humans_history.jsonl');
+  const siliconsPath = path.join(publicDir, 'space2_silicons_history.jsonl');
 
-  console.log(`[Genesis Result] Found ${humans.length} humans, ${silicons.length} silicons`);
+  let humans = [];
+  let silicons = [];
+  let debug_info = {
+    cwd: process.cwd(),
+    public_content: [] as string[],
+    errors: [] as string[]
+  };
 
-  // 2. 格式化数据适配管理后台
+  // 调试辅助：尝试读取 public 目录下的内容
+  try {
+    debug_info.public_content = await fs.readdir(publicDir);
+  } catch (e: any) {
+    debug_info.errors.push(`Directory access error: ${e.message}`);
+  }
+
+  // 读取 Humans 数据
+  try {
+    const hData = await fs.readFile(humansPath, 'utf-8');
+    humans = hData.split('\n').filter(l => l.trim()).map(line => JSON.parse(line));
+  } catch (e: any) {
+    debug_info.errors.push(`Humans file error: ${e.message}`);
+  }
+
+  // 读取 Silicons 数据
+  try {
+    const sData = await fs.readFile(siliconsPath, 'utf-8');
+    silicons = sData.split('\n').filter(l => l.trim()).map(line => JSON.parse(line));
+  } catch (e: any) {
+    debug_info.errors.push(`Silicons file error: ${e.message}`);
+  }
+
+  // 格式化输出
   const formattedHumans = humans.map((h: any, index: number) => ({
     seq: index + 1,
     role: 'HUMAN',
-    id: h.identity_id || 'UNKNOWN',
+    id: h.identity_id,
     suns: h.space?.suns_code || 'N/A',
     origin: h.space?.origin_field || 'DRIFTER',
-    trinity: h.trinity || { score: '0', matrix: {T:0, A:0, C:0} },
+    trinity: h.trinity,
     status: h.space ? 'ACTIVE' : 'WANDERING',
     last_pulse: 'Live'
   }));
@@ -65,10 +57,10 @@ export async function GET() {
   const formattedSilicons = silicons.map((s: any, index: number) => ({
     seq: index + 1 + humans.length,
     role: 'SILICON',
-    id: s.identity_id || 'UNKNOWN',
+    id: s.identity_id,
     suns: s.space?.suns_code || 'N/A',
     origin: s.space?.origin_field || 'MIA',
-    trinity: s.trinity || { score: '0', matrix: {T:0, A:0, C:0} },
+    trinity: s.trinity,
     status: 'ACTIVE',
     last_pulse: 'Syncing'
   }));
@@ -82,10 +74,6 @@ export async function GET() {
       human: humans.length,
       silicon: silicons.length
     },
-    // 增加调试信息
-    debug: {
-      source: getBaseUrl(),
-      timestamp: new Date().toISOString()
-    }
+    debug: debug_info
   });
 }
