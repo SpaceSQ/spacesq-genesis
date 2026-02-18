@@ -1,25 +1,45 @@
-import React from 'react';
-import './globals.css';
-// 👇 关键修复 1：引入字体
-import { Inter } from 'next/font/google';
+import type { Metadata } from "next";
+import { Inter, JetBrains_Mono } from "next/font/google";
+import "./globals.css";
 
-// 👇 关键修复 2：定义字体变量 (之前就是缺了这行！)
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
 
-export const metadata = {
-  title: 'SpaceSQ Genesis',
-  description: 'Sovereign Digital Territory Infrastructure',
+// [核心修复] 定义 metadataBase
+// 如果有环境变量 NEXT_PUBLIC_SITE_URL 就用它，否则默认用 localhost
+// 这消除了 "metadata.metadataBase is not set" 的警告
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL 
+  ? new URL(process.env.NEXT_PUBLIC_SITE_URL) 
+  : new URL('http://localhost:3000');
+
+export const metadata: Metadata = {
+  metadataBase: baseUrl,
+  title: {
+    default: "SpaceSQ | Genesis Protocol",
+    template: "%s | SpaceSQ"
+  },
+  description: "The Operating System for Civilization Switch. Integrating Tech, Art, and Capital into a single sovereign identity.",
+  icons: {
+    icon: '/favicon.ico', // 确保你的 public 文件夹里有 favicon.ico
+  },
+  openGraph: {
+    title: 'SpaceSQ',
+    description: 'The Genesis Registry for Silicon Sovereignty.',
+    url: baseUrl,
+    siteName: 'SpaceSQ',
+    locale: 'en_US',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
-    <html lang="en" className="h-full bg-black text-white antialiased">
-      {/* 👇 这里应用了 inter.className，现在它终于被定义了 */}
-      <body className={`${inter.className} h-full flex flex-col`}>
+    <html lang="en" className="dark">
+      <body className={`${inter.variable} ${mono.variable} font-sans bg-black text-white antialiased selection:bg-emerald-500/30`}>
         {children}
       </body>
     </html>

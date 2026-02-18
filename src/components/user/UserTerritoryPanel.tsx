@@ -1,104 +1,63 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Map, Zap, Check, Lock } from 'lucide-react';
+import { Map, Hammer, LayoutGrid, BrainCircuit, ListTodo, Code } from 'lucide-react';
+// 👇 关键修复：全部使用 @ 绝对路径引用，防止路径错误
+import TDOGController from '@/components/world/TDOGController';
+import SpaceTopologyBuilder from '@/components/world/SpaceTopologyBuilder';
+import LumiInterface from '@/components/world/LumiInterface';
+import TaskOrchestrator from '@/components/world/TaskOrchestrator';
+import GenesisCodeLab from '@/components/contribution/GenesisCodeLab';
 
-export default function UserTerritoryPanel() {
-  const [selectedSector, setSelectedSector] = useState<number | null>(null);
+interface Props {
+  userEmail: string;
+}
 
-  // 模拟 4x4 的地块网格
-  const sectors = Array.from({ length: 16 }, (_, i) => ({
-    id: i,
-    status: i === 5 ? 'owned' : i === 6 || i === 9 ? 'locked' : 'free', // 5号是你的，6/9被锁定，其他空闲
-    coordinates: `SEC-${100 + i}`
-  }));
+export default function UserTerritoryPanel({ userEmail }: Props) {
+  // 增加 'lab' 模式
+  const [activeTab, setActiveTab] = useState<'topology' | 'build' | 'soul' | 'task' | 'lab'>('topology');
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
-      <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-indigo-100 rounded-lg text-indigo-600">
-              <Map className="w-6 h-6" />
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-slate-900">Territory Grid</h2>
-              <p className="text-sm text-slate-500">Manage your sovereign digital land</p>
-            </div>
+    <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm h-full flex flex-col">
+      
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-indigo-100 rounded-lg text-indigo-600">
+            <Map className="w-6 h-6" />
           </div>
-          <div className="text-right">
-             <div className="text-sm text-slate-500">Total Assets</div>
-             <div className="text-2xl font-mono font-bold text-slate-900">1,200 SQ</div>
+          <div>
+            <h2 className="text-xl font-bold text-slate-900">Space Management</h2>
+            <p className="text-xs text-slate-500">Commander: {userEmail}</p>
           </div>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* 左侧：可视化地图 */}
-          <div className="aspect-square bg-slate-50 rounded-lg p-4 grid grid-cols-4 gap-2 border border-slate-100">
-            {sectors.map((sector) => (
-              <button
-                key={sector.id}
-                onClick={() => setSelectedSector(sector.id)}
-                className={`relative rounded-md border transition-all duration-200 flex items-center justify-center text-xs font-mono
-                  ${selectedSector === sector.id ? 'ring-2 ring-indigo-500 ring-offset-2 z-10' : ''}
-                  ${sector.status === 'owned' 
-                    ? 'bg-indigo-500 border-indigo-600 text-white' 
-                    : sector.status === 'locked' 
-                      ? 'bg-slate-200 border-slate-300 text-slate-400 cursor-not-allowed' 
-                      : 'bg-white border-slate-200 text-slate-400 hover:border-indigo-300 hover:bg-indigo-50'
-                  }
-                `}
-              >
-                {sector.status === 'owned' && <Zap className="w-4 h-4" />}
-                {sector.status === 'locked' && <Lock className="w-3 h-3" />}
-                {sector.status === 'free' && sector.id + 1}
-              </button>
-            ))}
-          </div>
-
-          {/* 右侧：详情面板 */}
-          <div className="flex flex-col justify-center space-y-4">
-            {selectedSector !== null ? (
-              <div className="bg-slate-50 p-6 rounded-xl border border-slate-200 animate-in fade-in slide-in-from-right-4">
-                <h3 className="text-lg font-bold text-slate-900 mb-2">Sector {sectors[selectedSector].coordinates}</h3>
-                
-                <div className="space-y-3 mb-6">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-500">Status</span>
-                    <span className="font-medium capitalize">{sectors[selectedSector].status}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-500">Resource Density</span>
-                    <span className="font-medium">High</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-500">Tax Rate</span>
-                    <span className="font-medium">0.5%</span>
-                  </div>
-                </div>
-
-                {sectors[selectedSector].status === 'free' ? (
-                  <button className="w-full py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition flex items-center justify-center gap-2">
-                    Claim Sector (500 SQ)
-                  </button>
-                ) : sectors[selectedSector].status === 'owned' ? (
-                  <button className="w-full py-2 bg-emerald-600 text-white rounded-lg font-medium cursor-default flex items-center justify-center gap-2">
-                    <Check className="w-4 h-4" /> You Own This
-                  </button>
-                ) : (
-                   <button disabled className="w-full py-2 bg-slate-200 text-slate-400 rounded-lg font-medium cursor-not-allowed">
-                    Sector Locked
-                  </button>
-                )}
-              </div>
-            ) : (
-              <div className="text-center text-slate-400 py-12 border-2 border-dashed border-slate-200 rounded-xl">
-                <Map className="w-10 h-10 mx-auto mb-2 opacity-20" />
-                <p>Select a sector to view details</p>
-              </div>
-            )}
-          </div>
+        
+        {/* Tabs */}
+        <div className="flex bg-slate-100 p-1 rounded-lg overflow-x-auto custom-scrollbar">
+          <button onClick={() => setActiveTab('topology')} className={`flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-md transition-all whitespace-nowrap ${activeTab === 'topology' ? 'bg-white shadow text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}>
+            <LayoutGrid className="w-4 h-4" /> Topology
+          </button>
+          <button onClick={() => setActiveTab('build')} className={`flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-md transition-all whitespace-nowrap ${activeTab === 'build' ? 'bg-white shadow text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}>
+            <Hammer className="w-4 h-4" /> TDOG
+          </button>
+          <button onClick={() => setActiveTab('soul')} className={`flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-md transition-all whitespace-nowrap ${activeTab === 'soul' ? 'bg-white shadow text-purple-600' : 'text-slate-500 hover:text-slate-700'}`}>
+            <BrainCircuit className="w-4 h-4" /> LUMI
+          </button>
+          <button onClick={() => setActiveTab('task')} className={`flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-md transition-all whitespace-nowrap ${activeTab === 'task' ? 'bg-white shadow text-amber-600' : 'text-slate-500 hover:text-slate-700'}`}>
+            <ListTodo className="w-4 h-4" /> Tasks
+          </button>
+          <button onClick={() => setActiveTab('lab')} className={`flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-md transition-all whitespace-nowrap ${activeTab === 'lab' ? 'bg-zinc-800 text-white shadow' : 'text-slate-500 hover:text-slate-700'}`}>
+            <Code className="w-4 h-4" /> Code Lab
+          </button>
         </div>
+      </div>
+
+      <div className="flex-1 overflow-hidden">
+        {activeTab === 'topology' && <div className="h-full animate-in fade-in"><SpaceTopologyBuilder /></div>}
+        {activeTab === 'build' && <div className="h-full animate-in fade-in"><TDOGController /></div>}
+        {activeTab === 'soul' && <div className="h-full animate-in fade-in"><LumiInterface /></div>}
+        {activeTab === 'task' && <div className="h-full animate-in fade-in"><TaskOrchestrator /></div>}
+        {activeTab === 'lab' && <div className="h-full animate-in fade-in"><GenesisCodeLab /></div>}
       </div>
     </div>
   );

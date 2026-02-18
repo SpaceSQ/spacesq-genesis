@@ -7,11 +7,11 @@ export default function Footer() {
     <footer className="border-t border-white/10 bg-black py-12 px-6 mt-auto">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 text-sm">
         
-        {/* 左侧：版权信息 */}
+        {/* 左侧：版权信息 - 修正为 2026 */}
         <div className="flex flex-col gap-2 text-center md:text-left">
           <div className="flex items-center justify-center md:justify-start gap-2 text-slate-400">
             <Copyright className="w-4 h-4" />
-            <span>2024-2030 SpaceSQ Genesis Foundation. All Rights Reserved.</span>
+            <span>2026 SpaceSQ Genesis Foundation. All Rights Reserved.</span>
           </div>
           <p className="text-slate-600 text-xs">
             Decentralized Autonomous Territory Protocol.

@@ -3,111 +3,121 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Shield, Lock, Fingerprint, ArrowRight, Loader2 } from 'lucide-react';
+import { Shield, Lock, Fingerprint, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [identity, setIdentity] = useState(''); // Email OR SLIP-ID
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+
+    if (!identity || !password) {
+      setError('Credentials missing.');
+      return;
+    }
+
     setIsLoading(true);
-    // 模拟身份验证过程
+    
     setTimeout(() => {
+      // 1. 尝试查找用户 (Local Storage 模拟数据库)
+      const userDataStr = localStorage.getItem(`USER_${identity}`);
+      
+      if (!userDataStr) {
+        setIsLoading(false);
+        setError('User not found. Check your Email or S2-SLIP ID.');
+        return;
+      }
+
+      const userData = JSON.parse(userDataStr);
+
+      // 2. 验证密码
+      if (userData.password !== password) {
+        setIsLoading(false);
+        setError('Incorrect password.');
+        return;
+      }
+
+      // 3. 登录成功：写入当前会话
+      // 统一格式：{ id: 'neo@gmail.com', type: 'CARBON' } 或 { id: 'SLIP-9922', type: 'SILICON' }
+      localStorage.setItem('CURRENT_USER', JSON.stringify({ 
+        id: userData.id, 
+        type: userData.type 
+      }));
+      
       router.push('/user');
-    }, 2000);
+    }, 1500);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden bg-black text-white">
-      
-      {/* 动态背景装饰 */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-20 pointer-events-none"></div>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-600/10 blur-[100px] rounded-full pointer-events-none"></div>
+    <div className="min-h-screen flex items-center justify-center p-6 bg-black text-white font-sans relative overflow-hidden">
+      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none"></div>
 
       <div className="w-full max-w-md relative z-10">
-        
-        {/* Logo区域 */}
-        <div className="text-center mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <div className="w-16 h-16 bg-zinc-900 border border-zinc-800 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl shadow-indigo-900/20">
+        <div className="text-center mb-8">
+          <div className="w-16 h-16 bg-zinc-900 border border-zinc-800 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl">
             <Shield className="w-8 h-8 text-indigo-500" />
           </div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Genesis Identity Layer</h1>
-          <p className="text-slate-500 text-sm mt-2">Secure Citizen Authentication Protocol</p>
+          <h1 className="text-2xl font-bold text-white">Unified Access</h1>
+          <p className="text-slate-500 text-sm mt-2">Human Commanders & Silicon Agents</p>
         </div>
 
-        {/* 登录卡片 */}
-        <div className="bg-zinc-900/80 backdrop-blur-xl border border-zinc-800 rounded-2xl p-8 shadow-2xl animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100">
-          
+        <div className="bg-zinc-900/80 backdrop-blur-xl border border-zinc-800 rounded-2xl p-8 shadow-2xl">
           <form onSubmit={handleLogin} className="space-y-6">
+            
             <div className="space-y-2">
-              <label className="text-xs font-mono text-indigo-400 uppercase tracking-wider">Citizen ID / Email</label>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500 group-focus-within:text-indigo-500 transition-colors">
-                  <Fingerprint className="w-5 h-5" />
-                </div>
+              <label className="text-xs font-mono text-slate-400 uppercase tracking-wider">
+                Identity (Email <span className="text-indigo-500">OR</span> S2-SLIP ID)
+              </label>
+              <div className="relative">
+                <Fingerprint className="absolute left-3 top-3 w-5 h-5 text-slate-500" />
                 <input 
                   type="text" 
-                  placeholder="USER-001" 
-                  className="w-full bg-black/50 border border-zinc-700 rounded-lg py-3 pl-10 pr-4 text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-mono"
+                  value={identity}
+                  onChange={(e) => setIdentity(e.target.value)}
+                  placeholder="name@gmail.com OR SLIP-82910" 
+                  className="w-full bg-black/50 border border-zinc-700 rounded-lg py-3 pl-10 text-white font-mono focus:border-indigo-500 outline-none transition-all"
                   required
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <label className="text-xs font-mono text-indigo-400 uppercase tracking-wider">Passphrase</label>
-              </div>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500 group-focus-within:text-indigo-500 transition-colors">
-                  <Lock className="w-5 h-5" />
-                </div>
+              <label className="text-xs font-mono text-slate-400 uppercase tracking-wider">Passphrase</label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-3 w-5 h-5 text-slate-500" />
                 <input 
                   type="password" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••" 
-                  className="w-full bg-black/50 border border-zinc-700 rounded-lg py-3 pl-10 pr-4 text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-mono"
+                  className="w-full bg-black/50 border border-zinc-700 rounded-lg py-3 pl-10 text-white font-mono focus:border-indigo-500 outline-none transition-all"
                   required
                 />
               </div>
             </div>
 
-            <button 
-              type="submit" 
-              disabled={isLoading}
-              className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-3 rounded-lg transition-all flex items-center justify-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed mt-8"
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Verifying Credentials...
-                </>
-              ) : (
-                <>
-                  Initiate Handshake <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </>
-              )}
+            {error && (
+              <div className="p-3 bg-red-950/30 border border-red-900/50 rounded-lg flex items-center gap-2 text-xs text-red-400 animate-in fade-in">
+                <AlertCircle className="w-4 h-4" /> {error}
+              </div>
+            )}
+
+            <button disabled={isLoading} className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-3 rounded-lg flex items-center justify-center gap-2 transition-all">
+              {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Access System <ArrowRight className="w-4 h-4" /></>}
             </button>
           </form>
 
           <div className="mt-8 pt-6 border-t border-white/5 text-center">
-            <p className="text-slate-500 text-xs">
-              Don't have a citizenship?{' '}
-              {/* 👇 关键修复：这里的链接改成了 /register */}
-              <Link href="/register" className="text-indigo-400 hover:text-indigo-300 transition-colors">
-                Apply for Residency
-              </Link>
-            </p>
+            <Link href="/register" className="text-indigo-400 hover:text-indigo-300 text-sm font-bold">
+              No Account? Register Identity
+            </Link>
           </div>
         </div>
-
-        <div className="mt-8 text-center animate-in fade-in duration-1000 delay-300">
-          <div className="inline-flex items-center gap-2 text-xs font-mono text-emerald-500/70 bg-emerald-950/20 px-3 py-1 rounded-full border border-emerald-900/50">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            ENCRYPTION: AES-256-GCM :: ACTIVE
-          </div>
-        </div>
-
       </div>
     </div>
   );

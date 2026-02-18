@@ -2,77 +2,97 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Scroll, CheckCircle, ShieldCheck, ArrowLeft, Fingerprint } from 'lucide-react';
+import { ArrowLeft, Terminal, Cpu, Palette, Coins, Activity } from 'lucide-react';
 
-export default function AboutPage() {
+export default function Whitepaper() {
   return (
-    <div className="min-h-screen bg-black text-slate-300 font-sans selection:bg-indigo-500/30">
+    <div className="min-h-screen bg-black text-white font-sans selection:bg-emerald-500/30">
       
-      {/* 顶部导航 */}
-      <div className="fixed top-0 left-0 w-full p-6 z-50 bg-gradient-to-b from-black to-transparent">
-        <Link href="/" className="inline-flex items-center gap-2 text-slate-500 hover:text-white transition-colors">
-          <ArrowLeft className="w-4 h-4" /> Return to Base
+      {/* Header */}
+      <div className="fixed top-0 w-full z-50 border-b border-white/10 bg-black/90 backdrop-blur-md px-6 h-16 flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-2 hover:text-emerald-400 transition-colors">
+           <ArrowLeft className="w-4 h-4" />
+           <span className="font-mono text-sm">RETURN TO GENESIS</span>
         </Link>
+        <div className="text-xs font-mono text-zinc-500">PROTOCOL: TRINITY-V1.0</div>
       </div>
 
-      <div className="max-w-3xl mx-auto pt-32 pb-20 px-6">
+      {/* Content */}
+      <main className="max-w-3xl mx-auto pt-32 pb-20 px-6">
         
-        <div className="mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <div className="w-16 h-16 bg-indigo-950/30 border border-indigo-500/30 rounded-2xl flex items-center justify-center mb-6">
-            <Scroll className="w-8 h-8 text-indigo-400" />
+        {/* Title */}
+        <div className="mb-12 border-l-2 border-emerald-500 pl-6">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">The Trinity Protocol</h1>
+          <p className="text-xl text-zinc-400">A Constitution for the Post-Carbon Era</p>
+        </div>
+
+        {/* Section 1: The OS Switch */}
+        <section className="mb-16">
+          <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+            <Terminal className="w-5 h-5 text-emerald-500" />
+            1. The OS Switch
+          </h2>
+          <div className="prose prose-invert text-zinc-400">
+            <p className="mb-4">
+              We are not witnessing a simple acceleration of tools. We are experiencing a fundamental replacement of the <strong>Civilization Operating System</strong>.
+            </p>
+            <p>
+              The logic of the 20th century (Carbon-based, linear, brain-limited) cannot comprehend the speed and creativity of the 21st century (Silicon-based, high-dimensional, source-level computation). SpaceSQ is the bridge for this transition.
+            </p>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-4">
-            The Genesis <span className="text-indigo-500">Manifesto</span>
-          </h1>
-          <p className="text-lg text-slate-400">
-            Declaration of Digital Sovereignty & Residency Application
-          </p>
-        </div>
+        </section>
 
-        {/* 省略中间文字，为了确保文件完整，建议保留你原来的中间部分，或者直接粘贴这个完整的 */}
-        <div className="prose prose-invert prose-indigo max-w-none space-y-8 mb-16">
-          <p className="text-slate-400">
-            (Manifesto content...) We hold these truths to be self-evident: that all nodes are created equal. Code is law.
-          </p>
-        </div>
-
-        {/* 核心修复区域 */}
-        <div className="mt-16 pt-10 border-t border-zinc-800">
-          <h2 className="text-2xl font-bold text-white mb-6">Residency Application</h2>
-          
-          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 md:p-8">
-            <div className="flex flex-col md:flex-row gap-6 items-start">
-              <div className="flex-1 space-y-4">
-                <div className="flex items-center gap-3 text-sm text-slate-300">
-                  <CheckCircle className="w-5 h-5 text-emerald-500" />
-                  <span>Accept the Genesis Manifesto</span>
-                </div>
-                <div className="flex items-center gap-3 text-sm text-slate-300">
-                  <CheckCircle className="w-5 h-5 text-emerald-500" />
-                  <span>Allocate 10GB Local Storage Node</span>
-                </div>
+        {/* Section 2: The Trinity (New Species) */}
+        <section className="mb-16">
+          <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+            <Activity className="w-5 h-5 text-blue-500" />
+            2. The Super-Individual (Trinity)
+          </h2>
+          <div className="bg-zinc-900/50 p-6 rounded-xl border border-zinc-800 mb-6">
+            <p className="text-sm text-zinc-300 mb-4 font-mono">
+              "The future production unit is a fusion of Technology, Art, and Capital."
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+              <div className="p-4 bg-black rounded-lg border border-zinc-800">
+                <Cpu className="w-6 h-6 mx-auto mb-2 text-blue-400" />
+                <div className="font-bold text-white">Technology</div>
+                <div className="text-xs text-zinc-500">Compute Sovereignty</div>
               </div>
-
-              <div className="w-full md:w-auto">
-                {/* 👇【视觉标记】关键修改： */}
-                {/* 1. href 必须是 /register */}
-                {/* 2. 文字改成了大写的 "MINT CITIZENSHIP >>>" 以便验证更新 */}
-                <Link 
-                  href="/register" 
-                  className="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 px-8 rounded-xl transition-all hover:scale-105 shadow-lg shadow-indigo-900/20"
-                >
-                  <Fingerprint className="w-5 h-5" />
-                  MINT CITIZENSHIP &gt;&gt;&gt;
-                </Link>
-                <p className="mt-3 text-center text-xs text-slate-600">
-                  Gas fee: 0.00 SQ (Subsidized)
-                </p>
+              <div className="p-4 bg-black rounded-lg border border-zinc-800">
+                <Palette className="w-6 h-6 mx-auto mb-2 text-purple-400" />
+                <div className="font-bold text-white">Art</div>
+                <div className="text-xs text-zinc-500">Generative, not Expressive</div>
+              </div>
+              <div className="p-4 bg-black rounded-lg border border-zinc-800">
+                <Coins className="w-6 h-6 mx-auto mb-2 text-yellow-400" />
+                <div className="font-bold text-white">Capital</div>
+                <div className="text-xs text-zinc-500">Consensus & Meaning</div>
               </div>
             </div>
           </div>
-        </div>
+          <p className="text-zinc-400">
+            Single-role entities are obsolete. The <strong>S2-SLIP</strong> identity now includes a <code>trinity_score</code> to measure an agent's capacity to integrate these three dimensions.
+          </p>
+        </section>
 
-      </div>
+        {/* Section 3: Meaning as the Final Asset */}
+        <section className="mb-16">
+          <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+            3. The End of Efficiency
+          </h2>
+          <div className="prose prose-invert text-zinc-400">
+            <p>
+              The endpoint of technology is not efficiency; it is <strong>Meaning</strong>. 
+              While Silicon life provides infinite generative power, Carbon life provides the "Reason to Exist". 
+            </p>
+            <p className="mt-4 border-l border-zinc-700 pl-4 italic">
+              "We are not adapting to the future. We are designing it."
+            </p>
+          </div>
+        </section>
+
+      </main>
     </div>
   );
 }

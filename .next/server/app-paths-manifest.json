@@ -1,16 +1,5 @@
 {
-  "/about/page": "app/about/page.js",
-  "/about/legal/page": "app/about/legal/page.js",
-  "/archives/page": "app/archives/page.js",
-  "/collaboration/page": "app/collaboration/page.js",
-  "/_not-found": "app/_not-found.js",
-  "/console/page": "app/console/page.js",
-  "/docs/page": "app/docs/page.js",
-  "/legal/page": "app/legal/page.js",
-  "/login/page": "app/login/page.js",
   "/page": "app/page.js",
-  "/register/page": "app/register/page.js",
-  "/terminal/page": "app/terminal/page.js",
   "/admin/page": "app/admin/page.js",
-  "/user/page": "app/user/page.js"
+  "/api/genesis/route": "app/api/genesis/route.js"
 }

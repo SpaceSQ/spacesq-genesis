@@ -1,26 +1,60 @@
 'use client';
+
 import React, { useState } from 'react';
-import { User, Map, Flag } from 'lucide-react';
-// 👇 引用新创建的真实组件
 import UserTerritoryPanel from './UserTerritoryPanel';
 import UserDiplomacyPanel from './UserDiplomacyPanel';
-import UserProfilePanel from './UserProfilePanel'; 
+import { LayoutDashboard, Map, Flag, User } from 'lucide-react';
 
-export default function UserDashboard() {
-  const [activeTab, setActiveTab] = useState('overview');
+// 👇 关键：定义 Props 接口，接收 userEmail
+interface Props {
+  userEmail: string;
+}
+
+export default function UserDashboard({ userEmail }: Props) {
+  // 默认选中 territory 标签
+  const [activeTab, setActiveTab] = useState<'territory' | 'diplomacy'>('territory');
 
   return (
-    <div className="flex flex-col md:flex-row gap-8">
-      <aside className="w-full md:w-64 flex-shrink-0 space-y-1">
-        <button onClick={() => setActiveTab('overview')} className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors ${activeTab === 'overview' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`}><User className="w-4 h-4" /> Profile</button>
-        <button onClick={() => setActiveTab('territory')} className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors ${activeTab === 'territory' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`}><Map className="w-4 h-4" /> Territory</button>
-        <button onClick={() => setActiveTab('diplomacy')} className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors ${activeTab === 'diplomacy' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`}><Flag className="w-4 h-4" /> Diplomacy</button>
-      </aside>
-      <main className="flex-1">
-        {activeTab === 'overview' && <UserProfilePanel />}
-        {activeTab === 'territory' && <UserTerritoryPanel />}
-        {activeTab === 'diplomacy' && <UserDiplomacyPanel />}
+    <div className="flex flex-col gap-6">
+      
+      {/* 顶部 Tab 导航栏 */}
+      <div className="flex items-center gap-1 border-b border-slate-200">
+        <button
+          onClick={() => setActiveTab('territory')}
+          className={`flex items-center gap-2 px-6 py-3 text-sm font-bold border-b-2 transition-all ${
+            activeTab === 'territory'
+              ? 'border-indigo-600 text-indigo-600 bg-indigo-50/50'
+              : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+          }`}
+        >
+          <Map className="w-4 h-4" />
+          Territory
+        </button>
+        <button
+          onClick={() => setActiveTab('diplomacy')}
+          className={`flex items-center gap-2 px-6 py-3 text-sm font-bold border-b-2 transition-all ${
+            activeTab === 'diplomacy'
+              ? 'border-indigo-600 text-indigo-600 bg-indigo-50/50'
+              : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+          }`}
+        >
+          <Flag className="w-4 h-4" />
+          Diplomacy
+        </button>
+      </div>
+
+      {/* 内容区域 */}
+      <main className="flex-1 min-h-[500px]">
+        {activeTab === 'territory' && (
+          // 👇 关键修复：把 userEmail 传给子组件，消灭报错！
+          <UserTerritoryPanel userEmail={userEmail} />
+        )}
+        
+        {activeTab === 'diplomacy' && (
+          <UserDiplomacyPanel />
+        )}
       </main>
+      
     </div>
   );
 }
